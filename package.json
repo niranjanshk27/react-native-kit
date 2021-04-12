@@ -1,0 +1,38 @@
+{
+  "name": "@bhoos/react-native-kit",
+  "version": "1.0.0",
+  "description": "Bhoos React Native Library",
+  "main": "dist/index.js",
+  "module": "es6/index.js",
+  "react-native": "src/index.ts",
+  "scripts": {
+    "clean": "rimraf dist && rimraf es6",
+    "build:cjs": "tsc",
+    "build:es6": "mkdir -p es6 && echo '{\"type\":\"module\"}' > es6/package.json && tsc --module es6 --outDir es6",
+    "build": "yarn build:cjs && yarn build:es6",
+    "prepublishOnly": "yarn clean && yarn build"
+  },
+  "files": [
+    "dist",
+    "src",
+    "es6",
+    "docs"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "author": "Ranjan Shrestha",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^26.0.15",
+    "@types/react": "^16.13.0",
+    "@types/react-native": "^0.64.2",
+    "jest": "^26.6.3",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.0.5"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  }
+}
