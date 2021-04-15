@@ -14,7 +14,8 @@
     "declaration": true,
     "outDir": "dist",
     "sourceMap": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "declarationMap": true
   },
   "include": [
     "src/**/*"
