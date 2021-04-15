@@ -13,7 +13,9 @@
     "preserveConstEnums": true,
     "declaration": true,
     "outDir": "dist",
-    "sourceMap": true
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "declarationMap": true
   },
   "include": [
     "src/**/*"
