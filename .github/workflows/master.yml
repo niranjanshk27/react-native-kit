@@ -9,7 +9,7 @@ name: Process master branch updates
 on:
   push:
     branches:
-      - master
+      - wf_test
 
 jobs:
   push-to-next:
