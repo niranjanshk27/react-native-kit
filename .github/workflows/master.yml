@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: '14.x'
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@bhoos'
+          scope: '@niranjanshk27'
       - name: Install Dependencies and publish packages
         run: |
           yarn
