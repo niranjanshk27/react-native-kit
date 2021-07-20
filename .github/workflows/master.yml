@@ -1,0 +1,52 @@
+# When any change is pushed on master, it triggers a beta
+# version release with the @next tag 
+#
+# When a tag is published, it triggers the release flow,
+# which takes the version which is released and converts
+# it into the @latest tag
+name: Process master branch updates
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  push-to-next:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          git config user.name bhoos-devops
+          git config user.email devops@bhoos.com
+          echo -e "github.com\n  login $GITHUB_TOKEN" >> ~/.netrc
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@bhoos'
+      - name: Install Dependencies and publish packages
+        run: |
+          yarn
+          yarn patch
+          version=$(node -p "require('./package.json').version")
+          echo "RELEASE_VERSION=${version}" >> $GITHUB_ENV
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release for moving to production
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: Release v${{ env.RELEASE_VERSION }}
+          body: ${{steps.github_release.outputs.changelog}}
+          draft: true
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
