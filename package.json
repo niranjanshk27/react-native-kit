@@ -1,6 +1,6 @@
 {
   "name": "@bhoos/react-native-kit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bhoos React Native Library",
   "main": "dist/index.js",
   "module": "es6/index.js",
