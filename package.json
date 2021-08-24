@@ -1,6 +1,6 @@
 {
   "name": "@bhoos/react-native-kit",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "Bhoos React Native Library",
   "main": "dist/index.js",
   "module": "es6/index.js",
@@ -21,7 +21,7 @@
   ],
   "repository": "git@github.com:bhoos/react-native-kit",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com/"
   },
   "author": "Ranjan Shrestha",
   "license": "MIT",
