@@ -1,18 +1,16 @@
-# When any change is pushed on master, it triggers a beta
-# version release with the @next tag 
-#
-# When a tag is published, it triggers the release flow,
-# which takes the version which is released and converts
-# it into the @latest tag
-name: Process master branch updates
+# When issue is created with title "Deploy" and anybody
+# comment "/deploy" in comment this workflow is triggered.
+# This workflow publish the package in @next tag.
+
+name: Process master branch for @next tag
 
 on:
-  push:
-    branches:
-      - master
+  issue_comment:
+    types: [created]
 
 jobs:
   push-to-next:
+    if: ${{ github.event.issue.title == 'Deploy' && github.event.comment.body == '/deploy' && github.event.issue.state == 'open' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,27 +24,22 @@ jobs:
           node-version: '14.x'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@bhoos'
+
       - name: Install Dependencies and publish packages
         run: |
           yarn
-          yarn version --patch
           yarn publish . --tag next
           version=$(node -p "require('./package.json').version")
           echo "RELEASE_VERSION=v${version}" >> $GITHUB_ENV
+          echo "ISSUE_NUMBER=${{github.event.issue.number}}" >> $GITHUB_ENV
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build Changelog
-        id: github_release
-        uses: mikepenz/release-changelog-builder-action@v1
-        with:
-          configuration: "workflow_config/config.json"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Create Release for moving to production
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.RELEASE_VERSION }}
-          name: Release ${{ env.RELEASE_VERSION }}
+          name: Release ${{ env.RELEASE_VERSION }} (#${{ env.ISSUE_NUMBER }})
           commit: master
           body: ${{steps.github_release.outputs.changelog}}
           draft: true
