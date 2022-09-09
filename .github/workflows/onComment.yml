@@ -28,10 +28,12 @@ jobs:
       - name: Install Dependencies and publish packages
         run: |
           yarn
-          yarn publish . --tag next
           version=$(node -p "require('./package.json').version")
           echo "RELEASE_VERSION=v${version}" >> $GITHUB_ENV
           echo "ISSUE_NUMBER=${{github.event.issue.number}}" >> $GITHUB_ENV
+          git push && git push --tags
+          yarn clean && yarn build
+          yarn publish . --tag next
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
